@@ -1,8 +1,8 @@
 """Create tweets table
 
-Revision ID: 3812f6776f12
+Revision ID: 1b03e3c35d67
 Revises: 
-Create Date: 2020-11-16 19:45:42.635899
+Create Date: 2020-11-27 12:50:40.622949
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3812f6776f12'
+revision = '1b03e3c35d67'
 down_revision = None
 branch_labels = None
 depends_on = None

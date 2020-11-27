@@ -1,0 +1,48 @@
+version: '2.2'
+
+services:
+  db:
+    image: postgres:12-alpine
+    container_name: db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=flask_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    container_name: web
+    depends_on:
+      db:
+        condition: service_healthy
+    command: flask run
+    volumes:
+      - .:/code
+    ports:
+      - 5000:5000
+    environment:
+      - DATABASE_URL=postgres://postgres:flask_password@db:5432/twitter_api_flask
+      - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_ENV=development
+
+  test:
+    build: .
+    container_name: test
+    depends_on:
+      db:
+        condition: service_healthy
+    command: nosetests -s --exe
+    volumes:
+      - .:/code
+    environment:
+      - DATABASE_URL=postgres://postgres:flask_password@db:5432/twitter_api_flask
+      - FLASK_ENV=test
+
+volumes:
+  postgres_data:
